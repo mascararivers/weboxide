@@ -2,8 +2,10 @@
 name = "weboxide"
 version = "0.1.0"
 edition = "2024"
-
-
+description = "Library for interacting with Discord webhooks"
+repository = "https://github.com/mascararivers/weboxide"
+license = "Apache-2.0 OR MIT"
+rust-version = "1.85.0"
 
 [dependencies]
 reqwest = "0.12.15"
