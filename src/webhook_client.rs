@@ -31,11 +31,7 @@ impl WebhookClient {
             "content": message
         });
 
-        self.client
-            .post(&self.hook_url)
-            .body(body.to_string())
-            .send()
-            .await?;
+        self.client.post(&self.hook_url).json(&body).send().await?;
 
         Ok(())
     }
