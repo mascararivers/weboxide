@@ -1,100 +1,106 @@
-use serde::Serialize;
+#![allow(clippy::too_many_arguments)]
+use crate::api::{Author, Embed, Field, Footer, Image, Provider, Thumbnail, Video, WebhookClient};
+use crate::error::WeboxideResult;
 use serde_json;
 
-#[derive(Serialize)]
-pub struct Field {
-    name: String,
-    value: String,
-    inline: bool,
-}
-#[derive(Serialize)]
-pub struct Footer;
-#[derive(Serialize)]
-pub struct Image; 
-#[derive(Serialize)]
-pub struct Thumbnail;
-#[derive(Serialize)] 
-pub struct Video;
-#[derive(Serialize)] 
-pub struct Provider;
-#[derive(Serialize)]
-pub struct Author;
-
-
-
-#[derive(Serialize, Default)]
-pub struct Embed {
-    pub title: String,
-    pub description: Option<String>,
-    pub fields: Vec<Field>,    
-    pub timestamp: Option<bool>,
-    pub color: Option<u32>,
-    pub footer: Option<Footer>,
-    pub image: Option<Image>,
-    pub thumbnail: Option<Thumbnail>,
-    pub video: Option<Video>,
-    pub provider: Option<Provider>,
-    pub author: Option<Author>
-}
-
-pub struct WebhookClient {
-    pub client: reqwest::Client,
-    pub hook_url: String,
-    pub avatar_url: Option<String>,
-    pub username: Option<String>,
-    pub embeds: Vec<Embed>
-}
-
 impl WebhookClient {
-    pub fn new(client: reqwest::Client, hook_url: String, avatar_url: Option<String>, username: Option<String>,
-    embeds: Vec<Embed>) -> WebhookClient {
+    pub fn new(
+        client: reqwest::Client,
+        hook_url: String,
+        avatar_url: Option<String>,
+        username: Option<String>,
+        embeds: Vec<Embed>,
+    ) -> WebhookClient {
         WebhookClient {
-            client: client,
-            hook_url: hook_url,
-            avatar_url: avatar_url,
-            username: username,
-            embeds: embeds,
+            client,
+            hook_url,
+            avatar_url,
+            username,
+            embeds,
         }
     }
-    pub fn send_message(&self, message: String) {
+
+    /// Sends a request to the webhook to send a message
+    ///
+    /// Fails when request fails, either due to invalid webhook URL or Discord API error
+    pub async fn send_message(&self, message: String) -> WeboxideResult<()> {
         let body = serde_json::json!({
             "avatar_url": self.avatar_url,
             "username": self.username,
             "embeds": self.embeds,
-            "content": message 
+            "content": message
         });
 
-        let _ = self.client.post(&self.hook_url).body(body.to_string());
+        self.client
+            .post(&self.hook_url)
+            .body(body.to_string())
+            .send()
+            .await?;
+
+        Ok(())
     }
 
-    pub fn delete_hook(&self) {
-        let _ = self.client.delete(self.hook_url.clone());
+    /// Deletes the webhook, removing it from Discord.
+    ///
+    /// Fails when request fails, either due to invalid webhook URL or Discord API error
+    pub async fn delete_hook(&self) -> WeboxideResult<()> {
+        self.client.delete(&self.hook_url).send().await?;
+        Ok(())
     }
 
+    /// Adds an embed to the webhook client's list of embeds from just the embed title, fields and
+    /// description.
+    ///
+    /// It is advised you run this function before sending the message.
     pub fn add_embed(&mut self, title: String, description: Option<String>, fields: Vec<Field>) {
         self.embeds.push(Embed {
-            title: title,            
-            description: description,
-            fields: fields,
+            title,
+            description,
+            fields,
             ..Default::default()
         });
     }
 
-    pub fn add_embed_from_parts(&mut self, title: String, description: Option<String>, fields: Vec<Field>,
-    timestamp: Option<bool>, color: Option<u32>, footer: Option<Footer>, image: Option<Image>,
-    thumbnail: Option<Thumbnail>, video: Option<Video>, provider: Option<Provider>, author: Option<Author>) {
+    /// Adds embed an embed to the webhook client's list of embeds from individual embed parts:
+    /// - `title`: Embed title information (mandatory)
+    /// - `description`: Embed description information
+    /// - `fields`: Embed fields information
+    /// - `timestamp`: Embed timestamp information
+    /// - `color`: Embed color information
+    /// - `footer`: Embed footer information
+    /// - `image`: Embed image information
+    /// - `thumbnail`: Embed thumbnail information
+    /// - `video`: Embed video information
+    /// - `provider`: Embed provider information
+    /// - `author`: Embed author information
+    ///
+    /// It is advised you run this function before sending the message.
+    pub fn add_embed_from_parts(
+        &mut self,
+        title: String,
+        description: Option<String>,
+        fields: Vec<Field>,
+        timestamp: Option<bool>,
+        color: Option<u32>,
+        footer: Option<Footer>,
+        image: Option<Image>,
+        thumbnail: Option<Thumbnail>,
+        video: Option<Video>,
+        provider: Option<Provider>,
+        author: Option<Author>,
+    ) {
         self.embeds.push(Embed {
-            title: title,
-            description: description,
-            fields: fields,
-            timestamp: timestamp,
-            color: color,
-            footer: footer,
-            image: image,
-            thumbnail: thumbnail,
-            video: video,
-            provider: provider,
-            author: author,          
+            title,
+            description,
+            fields,
+            timestamp,
+            color,
+            footer,
+            image,
+            thumbnail,
+            video,
+            provider,
+            author,
         });
     }
 }
