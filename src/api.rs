@@ -2,44 +2,44 @@ use serde::Serialize;
 
 #[derive(Serialize, Debug, Clone, Default)]
 pub struct Field {
-    name: String,
-    value: String,
-    inline: bool
+    pub name: String,
+    pub value: String,
+    pub inline: bool
 }
 
 #[derive(Serialize, Debug, Clone, Default)]
 pub struct Footer {
-    text: Option<String>,
-    icon_url: Option<String>
+    pub text: Option<String>,
+    pub icon_url: Option<String>
 }
 #[derive(Serialize, Debug, Clone, Default)]
 pub struct Image {
-    url: String,
-    height: Option<u32>,
-    width: Option<u32>
+    pub url: String,
+    pub height: Option<u32>,
+    pub width: Option<u32>
 }
 #[derive(Serialize, Debug, Clone, Default)]
 pub struct Thumbnail {
-    url: String,
-    height: Option<u32>,
-    width: Option<u32>
+    pub url: String,
+    pub height: Option<u32>,
+    pub width: Option<u32>
 }
 #[derive(Serialize, Debug, Clone, Default)]
 pub struct Video {
-    url: String,
-    height: Option<u32>,
-    width: Option<u32>
+    pub url: String,
+    pub height: Option<u32>,
+    pub width: Option<u32>
 }
 #[derive(Serialize, Debug, Clone, Default)]
 pub struct Provider {
-    name: Option<String>,
-    url: Option<String>
+    pub name: Option<String>,
+    pub url: Option<String>
 }
 #[derive(Serialize, Debug, Clone, Default)]
 pub struct Author {
-    name: String,
-    url: Option<String>,
-    icon_url: Option<String>
+    pub name: String,
+    pub url: Option<String>,
+    pub icon_url: Option<String>
 }
 
 #[derive(Serialize, Debug, Clone, Default)]
