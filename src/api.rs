@@ -1,48 +1,48 @@
 use serde::Serialize;
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, Clone)]
 pub struct Field {
     name: String,
     value: String,
     inline: bool
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug, Clone)]
 pub struct Footer {
     text: Option<String>,
     icon_url: Option<String>
 }
-#[derive(Serialize)]
+#[derive(Serialize, Debug, Clone)]
 pub struct Image {
     url: String,
     height: Option<u32>,
     width: Option<u32>
 }
-#[derive(Serialize)]
+#[derive(Serialize, Debug, Clone)]
 pub struct Thumbnail {
     url: String,
     height: Option<u32>,
     width: Option<u32>
 }
-#[derive(Serialize)]
+#[derive(Serialize, Debug, Clone)]
 pub struct Video {
     url: String,
     height: Option<u32>,
     width: Option<u32>
 }
-#[derive(Serialize)]
+#[derive(Serialize, Debug, Clone)]
 pub struct Provider {
     name: Option<String>,
     url: Option<String>
 }
-#[derive(Serialize)]
+#[derive(Serialize, Debug, Clone)]
 pub struct Author {
     name: String,
     url: Option<String>,
     icon_url: Option<String>
 }
 
-#[derive(Serialize, Default)]
+#[derive(Serialize, Debug, Clone, Default)]
 pub struct Embed {
     /// Title of embed
     pub title: String,
