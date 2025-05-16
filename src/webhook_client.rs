@@ -1,19 +1,26 @@
-use crate::api::{Author, Embed, Field, Footer, Image, Provider, Thumbnail, Video, WebhookClient};
-use crate::error::WeboxideResult;
-use serde_json;
+use crate::{
+    api::{Author, Embed, Field, Footer, Image, Provider, Thumbnail, Video},
+    error::WeboxideResult,
+};
 
-struct LooksConfig {
-    timestamp: Option<bool>,
-    color: Option<u32>,
-    footer: Option<Footer>,
-    author: Option<Author>,
+/// Wrapper to avoid providing too many arguments at once
+#[derive(Clone, Default)]
+#[allow(missing_docs)]
+pub struct LooksConfig {
+    pub timestamp: Option<bool>,
+    pub color: Option<u32>,
+    pub footer: Option<Footer>,
+    pub author: Option<Author>,
 }
 
-struct MediaConfig {
-    image: Option<Image>,
-    thumbnail: Option<Thumbnail>,
-    video: Option<Video>,
-    provider: Option<Provider>,
+/// Wrapper to avoid providing too many arguments at once
+#[derive(Clone, Default)]
+#[allow(missing_docs)]
+pub struct MediaConfig {
+    pub image: Option<Image>,
+    pub thumbnail: Option<Thumbnail>,
+    pub video: Option<Video>,
+    pub provider: Option<Provider>,
 }
 
 /// The webhook client interface.
@@ -31,16 +38,17 @@ pub struct WebhookClient {
 }
 
 impl WebhookClient {
+    /// Creates a new instance of the webhook client
     pub fn new(
         client: reqwest::Client,
-        hook_url: String,
+        hook_url: impl Into<String>,
         avatar_url: Option<String>,
         username: Option<String>,
         embeds: Vec<Embed>,
     ) -> WebhookClient {
         WebhookClient {
             client,
-            hook_url,
+            hook_url: hook_url.into(),
             avatar_url,
             username,
             embeds,
@@ -55,7 +63,7 @@ impl WebhookClient {
             "avatar_url": self.avatar_url,
             "username": self.username,
             "embeds": self.embeds,
-            "content": message
+            "content": message.into()
         });
 
         self.client.post(&self.hook_url).json(&body).send().await?;
