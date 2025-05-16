@@ -4,42 +4,47 @@ use serde::Serialize;
 pub struct Field {
     pub name: String,
     pub value: String,
-    pub inline: bool
+    pub inline: bool,
 }
 
 #[derive(Serialize, Debug, Clone, Default)]
 pub struct Footer {
     pub text: Option<String>,
-    pub icon_url: Option<String>
+    pub icon_url: Option<String>,
 }
+
 #[derive(Serialize, Debug, Clone, Default)]
 pub struct Image {
     pub url: String,
     pub height: Option<u32>,
-    pub width: Option<u32>
+    pub width: Option<u32>,
 }
+
 #[derive(Serialize, Debug, Clone, Default)]
 pub struct Thumbnail {
     pub url: String,
     pub height: Option<u32>,
-    pub width: Option<u32>
+    pub width: Option<u32>,
 }
+
 #[derive(Serialize, Debug, Clone, Default)]
 pub struct Video {
     pub url: String,
     pub height: Option<u32>,
-    pub width: Option<u32>
+    pub width: Option<u32>,
 }
+
 #[derive(Serialize, Debug, Clone, Default)]
 pub struct Provider {
     pub name: Option<String>,
-    pub url: Option<String>
+    pub url: Option<String>,
 }
+
 #[derive(Serialize, Debug, Clone, Default)]
 pub struct Author {
     pub name: String,
     pub url: Option<String>,
-    pub icon_url: Option<String>
+    pub icon_url: Option<String>,
 }
 
 #[derive(Serialize, Debug, Clone, Default)]
@@ -66,18 +71,4 @@ pub struct Embed {
     pub provider: Option<Provider>,
     /// Author information
     pub author: Option<Author>,
-}
-
-/// The webhook client interface.
-pub struct WebhookClient {
-    /// Reqwest client to be used for HTTP requests to Discord API
-    pub client: reqwest::Client,
-    /// The webhook URL
-    pub hook_url: String,
-    /// The avatar URL of the webhook user
-    pub avatar_url: Option<String>,
-    /// The username of the webhook user
-    pub username: Option<String>,
-    /// The embeds of the webhook
-    pub embeds: Vec<Embed>,
 }
